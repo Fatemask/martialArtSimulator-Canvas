@@ -2,7 +2,6 @@ var c = document.getElementById("my-canvas");
 var ctx = c.getContext("2d");
 
 
-
 var loadImage =(src, callback)=>{
     var img= document.createElement('img');
     img.onload=()=>callback(img);
@@ -13,13 +12,19 @@ var imagePath = (frameno, animation) => {
     return "/images/" +animation + '/' + frameno + ".png";
 }
 
-let frames = { idle:[1,2,3,4,5,6,7,8], kick:[1,2,3,4,5,6,7], punch:[1,2,3,4,5,6,7]};
+let frames = { idle:[1,2,3,4,5,6,7,8],
+    kick:[1,2,3,4,5,6,7],
+    punch:[1,2,3,4,5,6,7], 
+    backward:[1,2,3,4,5,6],
+    block:[1,2,3,4,5,6,7,8,9],
+    forward:[1,2,3,4,5,6]
+    };
 
 let loadImages =(callback)=> {
-    let images = { idle:[], kick:[], punch:[]};
+    let images = { idle:[], kick:[], punch:[], backward:[], block:[], forward:[]};
     let imagesToLoad = 0;
 
-    ["idle", "kick", "punch"].forEach((animation) =>{
+    ["idle", "kick", "punch", "backward", "block", "forward"].forEach((animation) =>{
         let animateFrames = frames[animation];
         imagesToLoad += animateFrames.length;
 
@@ -46,7 +51,7 @@ let animate = (ctx, images, animation, callback) =>{
         }, index*100);
     });
 
-    setTimeout(callback, images.length * 100);
+    setTimeout(callback, images[animation].length * 100);
 }
 
 loadImages((images, )=>{
@@ -74,12 +79,29 @@ loadImages((images, )=>{
        quedAnimation.push("punch");
    }
 
+   document.getElementById("block").onclick =()=>{
+    quedAnimation.push("block");
+   }
+
+   document.getElementById("backward").onclick =()=>{
+    quedAnimation.push("backward");
+   }
+
+   document.getElementById("forward").onclick =()=>{
+    quedAnimation.push("forward");
+   }
+
+
    document.addEventListener("keyup", (event)=>{
        const key = event.key;
        if(key==="ArrowLeft"){
         quedAnimation.push("kick");
        } else if(key === "ArrowRight"){
         quedAnimation.push("punch");
+       } else if( key === 'ArrowUp'){
+        quedAnimation.push("forward"); 
+       } else if( key === "ArrowDown"){
+        quedAnimation.push("backward");
        }
    });
 });
